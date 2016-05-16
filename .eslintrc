@@ -1,0 +1,10 @@
+{
+    "extends": [
+        "./node_modules/coding-standards/js/linters/.eslintrc",
+        "./node_modules/coding-standards/js/linters/.eslintrc-react",
+        "./node_modules/coding-standards/js/linters/.eslintrc-flow"
+    ],
+    "globals": {
+        "__DEV__": true
+    }
+}
