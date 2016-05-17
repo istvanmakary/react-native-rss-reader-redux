@@ -102,22 +102,18 @@ let parseResult = (response) => {
 // });
 
 let rssReducer = (state = initialState, action = {}) => {
-    let newState;
     switch (action.type) {
         case ADD_SUCCESS:
-            newState = Object.assign({}, state, {
+            return Object.assign({}, state, {
                 success: true,
                 errorMessage: false,
-                triggerSave: false
+                triggerSave: false,
+                feeds: [...state.feeds, {
+                    id: `feed-item-${state.feeds.length}`,
+                    url: action.data,
+                    order: state.feeds.length
+                }]
             });
-
-            newState.feeds.push({
-                id: `feed-item-${newState.feeds.length}`,
-                url: action.data,
-                order: newState.feeds.length
-            });
-
-            return newState;
         case ERROR:
             return Object.assign({}, state, {
                 success: false,
