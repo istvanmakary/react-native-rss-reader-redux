@@ -1,18 +1,28 @@
-let React = require('react');
-let {View, ListView} = require('react-native');
-let GlobalStyles = require('./../Styles/global');
+import React from 'react';
+import {ListView} from 'react-native';
+import {connect} from 'react-redux';
+import AddFeedButton from './AddFeedButton';
+import Layout from './Layout';
+let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
 const RssList = (props) => {
-    let dataSources = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-    dataSources = dataSources.cloneWithRows(['row 1', 'row 2']);
+    let dataSource;
+
+    if (props.feeds.length) {
+        dataSource = ds.cloneWithRows(['row 1', 'row 2']);
+
+        return (
+            <Layout>
+                <ListView
+                    dataSource={dataSource}
+                    renderRow={(rowData) => <Text>{rowData}</Text>}
+                />
+            </Layout>
+        );
+    }
 
     return (
-        <View style={GlobalStyles.wrapper}>
-            <ListView
-                dataSource={props.feeds}
-                renderRow={(rowData) => <Text>{rowData}</Text>}
-            />
-        </View>
+        <AddFeedButton />
     );
 };
 

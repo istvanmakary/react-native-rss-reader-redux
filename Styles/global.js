@@ -7,5 +7,18 @@ module.exports = StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
         backgroundColor: '#EFEFF4'
+    },
+    center: {
+        flex: 1,
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center'
+    },
+    emptyMessage: {
+        marginTop: -60,
+        padding: 12,
+        overflow: 'hidden',
+        borderRadius: 4,
+        backgroundColor: '#fff'
     }
 });

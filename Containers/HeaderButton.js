@@ -1,6 +1,6 @@
-let React = require('react');
-let {View, StyleSheet} = require('react-native');
-let IconButton = require('./IconButton');
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
+import IconButton from './IconButton';
 let styles;
 
 let HeaderButton = (props) => {

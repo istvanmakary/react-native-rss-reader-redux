@@ -1,50 +1,69 @@
-let React = require('react');
-let {View, StyleSheet} = require('react-native');
-let {connect} = require('react-redux');
-let GlobalStyles = require('./../Styles/global');
-let TextInput = require('./../Components/TextInput');
-let Button = require('./../Components/Button');
-let {addRss, typeRss} = require('./../Redux/Actions/RssActions');
-let {displayNotification, hideNotification} = require('./../Redux/Actions/NoticifationAction');
+import React from 'react';
+import {View, StyleSheet} from 'react-native';
+import {connect} from 'react-redux';
+import TextInput from './../Components/TextInput';
+import {addRss, hideError} from './../Redux/Actions/RssActions';
+import {displayNotification, hideNotification} from './../Redux/Actions/NoticifationAction';
+import {Actions} from 'react-native-redux-router';
+import Layout from './Layout';
 let styles;
 
-let AddRss = (props) => {
-    let urlChange = (value) => {
-        props.typeRss(value);
-    };
+class AddRss extends React.Component {
+    constructor(props) {
+        super(props);
 
-    let submit = () => {
-        props.addRss();
-    };
-
-    if (props.errorMessage) {
-        props.displayNotification(props.errorMessage);
-    } else {
-        props.hideNotification();
+        this.state = {
+            url: ''
+        };
     }
 
-    return (
-        <View style={GlobalStyles.wrapper}>
-            <View style={styles.inputContainer}>
-                <TextInput name="rss" label="Rss feed url" value={props.url} placeholder="http://sample-rss.com" onChangeText={(value) => urlChange.bind(this)(value)} />
-            </View>
-            <Button
-                containerStyle={styles.buttonContainer}
-                onPress={() => submit.bind(this)()}
-            >
-                Add new feed
-            </Button>
-        </View>
-    );
-};
+    componentWillUnmount() {
+        this.props.hideError();
+    }
+
+    render() {
+        this.props.hideNotification();
+
+        if (this.props.triggerSave) {
+            this.props.addRss(this.state.url);
+            return null;
+        }
+
+        if (this.props.errorMessage) {
+            this.props.displayNotification({
+                type: 'warning',
+                message: this.props.errorMessage
+            });
+        } else if (this.props.success) {
+            Actions.settings();
+        }
+
+        return (
+            <Layout>
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        name="rss"
+                        label="Rss feed url"
+                        value={this.props.url}
+                        placeholder="http://sample-rss.com"
+                        onChangeText={(value) => this.setState.bind(this)({url: value})}
+                        autoCapitalize="none"
+                    />
+                </View>
+            </Layout>
+        );
+    }
+}
 
 AddRss.propTypes = {
     url: React.PropTypes.string.isRequired,
     errorMessage: React.PropTypes.string,
+    success: React.PropTypes.bool,
+    triggerSave: React.PropTypes.bool,
     addRss: React.PropTypes.func,
-    typeRss: React.PropTypes.func,
     displayNotification: React.PropTypes.func,
-    hideNotification: React.PropTypes.func
+    hideNotification: React.PropTypes.func,
+    hideError: React.PropTypes.func
 };
 
 styles = StyleSheet.create({
@@ -53,27 +72,22 @@ styles = StyleSheet.create({
     },
     inputContainer: {
         marginBottom: 20
-    },
-    buttonContainer: {
-        padding: 12,
-        overflow: 'hidden',
-        borderRadius: 4,
-        backgroundColor: '#fff'
     }
 });
 
 function mapStateToProps(state) {
-    let {url, errorMessage} = state.rssReducer;
+    let {triggerSave, errorMessage, success} = state.rssReducer;
 
     return {
-        url,
-        errorMessage
+        errorMessage,
+        success,
+        triggerSave
     };
 }
 
 let mapDispatchToProps = {
     addRss,
-    typeRss,
+    hideError,
     displayNotification,
     hideNotification
 };

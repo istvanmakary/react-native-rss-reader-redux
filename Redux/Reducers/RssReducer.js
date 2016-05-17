@@ -1,10 +1,11 @@
-let {ADD, TYPE} = require('./../Config/RssConfig');
+import {ADD_SUCCESS, ERROR, TRIGGER_SAVE, HIDE_ERROR} from './../Config/RssConfig';
 // let DOMParser = require('xmldom').DOMParser;
 
 let initialState = {
-    url: '',
+    success: false,
     feeds: [],
-    errorMessage: null
+    errorMessage: false,
+    triggerSave: false
 };
 
 let fetchRss = (url) => (
@@ -100,37 +101,37 @@ let parseResult = (response) => {
 //     result.error = 'Couldn\'t fetch the given feed!';
 // });
 
-let validateRss = (state) => {
-    let result = {
-        errorMessage: 'The entered url is not valid!'
-    };
-
-    if (state.url &&
-        state.url.indexOf('http') !== -1 &&
-        state.url.indexOf('://') !== -1 &&
-        state.url.indexOf('.') !== -1) {
-        let currentFeed = state.feeds;
-        currentFeed.push(state.url);
-        result = {
-            currentFeed,
-            success: true,
-            url: '',
-            errorMessage: null
-        };
-    }
-
-    return Object.assign({}, state, result);
-};
-
 let rssReducer = (state = initialState, action = {}) => {
     switch (action.type) {
-        case ADD:
-            return validateRss(state);
-        case TYPE:
-            return Object.assign({}, state, {url: action.data});
-    }
+        case ADD_SUCCESS:
+            state.feeds.push({
+                id: `feed-item-${state.feeds.length}`,
+                url: action.data,
+                order: state.feeds.length
+            });
 
-    return state;
+            return Object.assign({}, state, {
+                success: true,
+                errorMessage: false,
+                triggerSave: false
+            });
+        case ERROR:
+            return Object.assign({}, state, {
+                success: false,
+                errorMessage: 'The entered rss feed is not valid!',
+                triggerSave: false
+            });
+        case TRIGGER_SAVE:
+            return Object.assign({}, state, {
+                triggerSave: true
+            });
+        case HIDE_ERROR:
+            return Object.assign({}, state, {
+                errorMessage: false
+            });
+        default:
+            return state;
+    }
 };
 
 module.exports = rssReducer;

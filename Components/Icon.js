@@ -1,6 +1,6 @@
-let React = require('React');
-let {createIconSetFromFontello} = require('react-native-vector-icons');
-let config = require('./../Iconfont/config');
+import React from 'React';
+import {createIconSetFromFontello} from 'react-native-vector-icons';
+import config from './../Iconfont/config';
 let Icon = createIconSetFromFontello(config);
 
 let icon = ({src, size, color}) => (

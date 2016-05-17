@@ -1,6 +1,6 @@
-let React = require('react');
-let {Router, Route} = require('react-native-redux-router');
-let RouterConfig = require('./../Config/Router.js');
+import React from 'react';
+import {Router, Route} from 'react-native-redux-router';
+import RouterConfig from './../Config/Router.js';
 
 let AppRouter = () => (
     <Router>

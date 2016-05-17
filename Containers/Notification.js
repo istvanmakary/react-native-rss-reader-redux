@@ -1,28 +1,22 @@
-let React = require('react');
-let {connect} = require('react-redux');
-let {View, Text, StyleSheet} = require('react-native');
-let {hideNotification} = require('./../Redux/Actions/NoticifationAction');
+import React from 'react';
+import {connect} from 'react-redux';
+import {View, Text, StyleSheet} from 'react-native';
+import {hideNotification} from './../Redux/Actions/NoticifationAction';
 let styles;
-let activeRoute;
 
-let Notification = (props) => {
-    if (props.currentRoute !== activeRoute) {
-        props.hideNotification();
-    }
-
-    activeRoute = props.currentRoute;
-
-    return (
-        props.notification ? (
-            <View style={styles.container}>
-                <Text style={styles.text}>{props.notification}</Text>
-            </View>
-        ) : <View />
-    );
-};
+let Notification = (props) => (
+    props.notification ? (
+        <View style={[styles.container, styles[props.notification.type]]}>
+            <Text style={styles.text}>{props.notification.message}</Text>
+        </View>
+    ) : <View />
+);
 
 Notification.propTypes = {
-    notification: React.PropTypes.string,
+    notification: React.PropTypes.oneOfType([
+        React.PropTypes.object,
+        React.PropTypes.bool
+    ]),
     currentRoute: React.PropTypes.string,
     hideNotification: React.PropTypes.func
 };
@@ -33,23 +27,26 @@ styles = StyleSheet.create({
         paddingTop: 5,
         paddingBottom: 5,
         paddingLeft: 10,
-        paddingRight: 10,
-        backgroundColor: 'red'
+        paddingRight: 10
     },
     text: {
         color: '#fff',
         fontSize: 14,
         fontWeight: 'bold'
+    },
+    warning: {
+        backgroundColor: 'red'
+    },
+    success: {
+        backgroundColor: 'green'
     }
 });
 
 function mapStateToProps(state) {
     let {notification} = state.notificationReducer;
-    let {currentRoute} = state.routerReducer;
 
     return {
-        notification,
-        currentRoute
+        notification
     };
 }
 

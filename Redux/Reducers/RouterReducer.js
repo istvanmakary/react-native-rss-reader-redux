@@ -1,2 +1,2 @@
-let {routerReducer} = require('react-native-redux-router');
+import {routerReducer} from 'react-native-redux-router';
 module.exports = routerReducer;

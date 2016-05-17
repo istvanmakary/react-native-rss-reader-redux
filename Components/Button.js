@@ -1,5 +1,5 @@
-let React = require('React');
-let Button = require('react-native-button');
+import React from 'React';
+import Button from 'react-native-button';
 
 let btn = (props) => (
     <Button {...props} />

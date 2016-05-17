@@ -1,9 +1,10 @@
-let navBar = require('./../Containers/NavBar');
-let RssList = require('./../Containers/RssList');
-let AddRss = require('./../Containers/AddRss');
-let Settings = require('./../Containers/Settings');
-let {Actions} = require('react-native-redux-router');
-
+import navBar from './../Containers/NavBar';
+import RssList from './../Containers/RssList';
+import AddRss from './../Containers/AddRss';
+import Settings from './../Containers/Settings';
+import {Actions} from 'react-native-redux-router';
+import {triggerSave} from './../Redux/Actions/RssActions';
+import store from './../Redux/Store';
 const navigate = (target) => () => Actions[target === 'back' ? 'pop' : target]();
 
 const ROUTES = {
@@ -16,7 +17,7 @@ const ROUTES = {
             title: 'Reader',
             rightButton: {
                 onPress: navigate('settings'),
-                label: 'Settings',
+                label: 'Feeds',
                 icon: 'angle-right'
             }
         },
@@ -43,6 +44,10 @@ const ROUTES = {
                 onPress: navigate('back'),
                 label: 'Back',
                 icon: 'angle-left'
+            },
+            rightButton: {
+                onPress: () => store.dispatch(triggerSave()),
+                label: 'Done'
             }
         }
     ]

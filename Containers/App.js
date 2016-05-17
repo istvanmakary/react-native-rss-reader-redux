@@ -1,7 +1,7 @@
-let React = require('react');
-let {Provider} = require('react-redux');
-let store = require('./../Redux/Store');
-let AppRouter = require('./AppRouter');
+import React from 'react';
+import {Provider} from 'react-redux';
+import store from './../Redux/Store';
+import AppRouter from './AppRouter';
 
 const App = () => (
     <Provider store={store}>

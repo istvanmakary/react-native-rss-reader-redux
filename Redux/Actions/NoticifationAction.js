@@ -1,4 +1,4 @@
-let {DISPLAY, HIDE} = require('./../Config/NotificationConfig');
+import {DISPLAY, HIDE} from './../Config/NotificationConfig';
 
 function displayNotification(data) {
     return {
@@ -7,7 +7,7 @@ function displayNotification(data) {
     };
 }
 
-function hideNotification(data) {
+function hideNotification() {
     return {
         type: HIDE
     };

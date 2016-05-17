@@ -1,7 +1,7 @@
-let {combineReducers} = require('redux');
-let routerReducer = require('./RouterReducer');
-let rssReducer = require('./RssReducer');
-let notificationReducer = require('./NotificationReducer');
+import {combineReducers} from 'redux';
+import routerReducer from './RouterReducer';
+import rssReducer from './RssReducer';
+import notificationReducer from './NotificationReducer';
 
 let rootReducer = combineReducers({
     routerReducer,

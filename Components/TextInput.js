@@ -1,8 +1,8 @@
-let React = require('React');
-let {View, Text, TextInput, StyleSheet} = require('react-native');
+import React from 'React';
+import {View, Text, TextInput, StyleSheet} from 'react-native';
 let styles;
 
-let Input = ({label, name, value, onChangeText, placeholder}) => (
+let Input = ({label, name, value, onChangeText, placeholder, ...props}) => (
     <View key={name} style={styles.inputContainer}>
         <Text style={styles.inputLabel}>{label}</Text>
         <TextInput
@@ -12,6 +12,7 @@ let Input = ({label, name, value, onChangeText, placeholder}) => (
             placeholder={placeholder}
             style={styles.inputField}
             value={value}
+            {...props}
         />
     </View>
 );

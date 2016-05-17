@@ -1,20 +1,31 @@
-let {ADD, TYPE} = require('./../Config/RssConfig');
+import {ADD_SUCCESS, ERROR, TRIGGER_SAVE, HIDE_ERROR} from './../Config/RssConfig';
 
-function addRss(data) {
-    return {
-        type: ADD,
+let validateRss = (data) => (/^(http|https):\/\/[^ "]+$/.test(data));
+
+let addRss = (data) => (
+    validateRss(data) ? {
+        type: ADD_SUCCESS,
         data
+    } : {
+        type: ERROR,
+        data
+    }
+);
+
+function triggerSave() {
+    return {
+        type: TRIGGER_SAVE
     };
 }
 
-function typeRss(data) {
+function hideError() {
     return {
-        type: TYPE,
-        data
+        type: HIDE_ERROR
     };
 }
 
 module.exports = {
     addRss,
-    typeRss
+    triggerSave,
+    hideError
 };

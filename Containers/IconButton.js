@@ -1,7 +1,7 @@
-let React = require('React');
-let {View} = require('react-native');
-let Button = require('./../Components/Button');
-let Icon = require('./../Components/Icon');
+import React from 'React';
+import {View} from 'react-native';
+import Button from './../Components/Button';
+import Icon from './../Components/Icon';
 
 let btn = (props) => {
     let buttonContent = [

@@ -1,7 +1,6 @@
-let React = require('react');
-let {View, Text, StyleSheet} = require('react-native');
-let HeaderButton = require('./HeaderButton');
-let Notification = require('./Notification');
+import React from 'react';
+import {View, Text, StyleSheet} from 'react-native';
+import HeaderButton from './HeaderButton';
 let styles;
 
 let NavBar = (props) => (
@@ -20,7 +19,6 @@ let NavBar = (props) => (
                 reverseOrder
             />
         </View>
-        <Notification />
     </View>
 );
 
