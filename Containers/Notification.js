@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {View, Text, StyleSheet} from 'react-native';
+import {Colors} from './../Styles';
 import {hideNotification} from './../Redux/Actions/NoticifationAction';
 let styles;
 
@@ -30,7 +31,7 @@ styles = StyleSheet.create({
         paddingRight: 10
     },
     text: {
-        color: '#fff',
+        color: Colors.white,
         fontSize: 14,
         fontWeight: 'bold'
     },

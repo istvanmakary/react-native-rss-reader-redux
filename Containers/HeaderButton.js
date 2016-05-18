@@ -1,6 +1,7 @@
 import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import IconButton from './IconButton';
+import {Colors} from './../Styles';
 let styles;
 
 let HeaderButton = (props) => {
@@ -15,7 +16,7 @@ let HeaderButton = (props) => {
                 onPress={props.item.onPress}
                 src={props.item.icon}
                 size={20}
-                color="#007aff"
+                color={Colors.blue}
                 reverse={props.reverseOrder}
             >
                 {props.item.label}

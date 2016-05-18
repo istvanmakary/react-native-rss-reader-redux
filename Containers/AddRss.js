@@ -2,9 +2,11 @@ import React from 'react';
 import {View, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
 import TextInput from './../Components/TextInput';
-import {addRss, hideError} from './../Redux/Actions/RssActions';
+import Button from './../Components/Button';
+import {updateRssFeeds, resetAddForm, getRssItem} from './../Redux/Actions/RssActions';
 import {displayNotification, hideNotification} from './../Redux/Actions/NoticifationAction';
 import {Actions} from 'react-native-redux-router';
+import {Colors} from './../Styles';
 import Layout from './Layout';
 let styles;
 
@@ -13,19 +15,29 @@ class AddRss extends React.Component {
         super(props);
 
         this.state = {
-            url: ''
+            url: '',
+            id: null,
+            order: null
         };
     }
 
     componentWillUnmount() {
-        this.props.hideError();
+        this.props.resetAddForm();
     }
 
     render() {
-        this.props.hideNotification();
-
         if (this.props.triggerSave) {
-            this.props.addRss(this.state.url);
+            this.props.updateRssFeeds(this.state);
+            return null;
+        }
+
+        if (this.props.editItem && !this.state.id) {
+            this.setState(this.props.editItem[0]);
+            return null;
+        }
+
+        if (this.props.rssId && !this.state.id) {
+            this.props.getRssItem(this.props.rssId);
             return null;
         }
 
@@ -35,6 +47,8 @@ class AddRss extends React.Component {
                 message: this.props.errorMessage
             });
         } else if (this.props.success) {
+            this.props.hideNotification();
+            this.props.resetAddForm();
             Actions.settings();
         }
 
@@ -44,11 +58,14 @@ class AddRss extends React.Component {
                     <TextInput
                         name="rss"
                         label="Rss feed url"
-                        value={this.props.url}
+                        value={this.state.url}
                         placeholder="http://sample-rss.com"
                         onChangeText={(value) => this.setState.bind(this)({url: value})}
                         autoCapitalize="none"
                     />
+                {this.state.id ?
+                    <Button style={styles.deleteButton}>Delete Feed</Button>
+                    : null}
                 </View>
             </Layout>
         );
@@ -60,10 +77,13 @@ AddRss.propTypes = {
     errorMessage: React.PropTypes.string,
     success: React.PropTypes.bool,
     triggerSave: React.PropTypes.bool,
-    addRss: React.PropTypes.func,
+    updateRssFeeds: React.PropTypes.func,
     displayNotification: React.PropTypes.func,
     hideNotification: React.PropTypes.func,
-    hideError: React.PropTypes.func
+    resetAddForm: React.PropTypes.func,
+    getRssItem: React.PropTypes.func,
+    editItem: React.PropTypes.object,
+    rssId: React.PropTypes.string
 };
 
 styles = StyleSheet.create({
@@ -72,22 +92,27 @@ styles = StyleSheet.create({
     },
     inputContainer: {
         marginBottom: 20
+    },
+    deleteButton: {
+        color: Colors.red
     }
 });
 
 function mapStateToProps(state) {
-    let {triggerSave, errorMessage, success} = state.rssReducer;
+    let {triggerSave, errorMessage, success, editItem} = state.rssReducer;
 
     return {
         errorMessage,
         success,
-        triggerSave
+        triggerSave,
+        editItem
     };
 }
 
 let mapDispatchToProps = {
-    addRss,
-    hideError,
+    updateRssFeeds,
+    resetAddForm,
+    getRssItem,
     displayNotification,
     hideNotification
 };

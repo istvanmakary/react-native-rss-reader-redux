@@ -1,5 +1,5 @@
 import React from 'react';
-import {ListView} from 'react-native';
+import {ListView, Text} from 'react-native';
 import {connect} from 'react-redux';
 import AddFeedButton from './AddFeedButton';
 import Layout from './Layout';

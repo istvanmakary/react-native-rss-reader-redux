@@ -1,11 +1,18 @@
-import {ADD_SUCCESS, ERROR, TRIGGER_SAVE, HIDE_ERROR} from './../Config/RssConfig';
+import {
+    VALIDATION_SUCCESS,
+    ERROR,
+    TRIGGER_SAVE,
+    RESET_ADD_FROM,
+    GET_RSS_ITEM
+} from './../Config/RssConfig';
 // let DOMParser = require('xmldom').DOMParser;
 
 let initialState = {
     success: false,
     feeds: [],
     errorMessage: false,
-    triggerSave: false
+    triggerSave: false,
+    editItem: false
 };
 
 let fetchRss = (url) => (
@@ -102,18 +109,33 @@ let parseResult = (response) => {
 // });
 
 let rssReducer = (state = initialState, action = {}) => {
+    let newState;
+
     switch (action.type) {
-        case ADD_SUCCESS:
-            return Object.assign({}, state, {
+        case VALIDATION_SUCCESS:
+            newState = Object.assign({}, state, {
                 success: true,
                 errorMessage: false,
-                triggerSave: false,
-                feeds: [...state.feeds, {
-                    id: `feed-item-${state.feeds.length}`,
-                    url: action.data,
-                    order: state.feeds.length
-                }]
+                triggerSave: false
             });
+
+            if (action.data.id) {
+                newState.feeds.map((rss) => {
+                    if (rss.id !== action.data.id) {
+                        return rss;
+                    }
+
+                    return action.data;
+                });
+            } else {
+                newState.feeds.push({
+                    id: `feed-item-${state.feeds.length}`,
+                    url: action.data.url,
+                    order: state.feeds.length
+                });
+            }
+
+            return newState;
         case ERROR:
             return Object.assign({}, state, {
                 success: false,
@@ -124,9 +146,19 @@ let rssReducer = (state = initialState, action = {}) => {
             return Object.assign({}, state, {
                 triggerSave: true
             });
-        case HIDE_ERROR:
+        case RESET_ADD_FROM:
             return Object.assign({}, state, {
-                errorMessage: false
+                errorMessage: false,
+                success: false,
+                triggerSave: false
+            });
+        case GET_RSS_ITEM:
+            return Object.assign({}, state, {
+                editItem: state.feeds.map((rss) => {
+                    if (rss.id !== action.data.id) {
+                        return rss;
+                    }
+                })
             });
         default:
             return state;

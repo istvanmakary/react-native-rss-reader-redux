@@ -1,10 +1,16 @@
-import {ADD_SUCCESS, ERROR, TRIGGER_SAVE, HIDE_ERROR} from './../Config/RssConfig';
+import {
+    VALIDATION_SUCCESS,
+    ERROR,
+    TRIGGER_SAVE,
+    RESET_ADD_FROM,
+    GET_RSS_ITEM
+} from './../Config/RssConfig';
 
 let validateRss = (data) => (/^(http|https):\/\/[^ "]+$/.test(data));
 
-let addRss = (data) => (
-    validateRss(data) ? {
-        type: ADD_SUCCESS,
+let updateRssFeeds = (data) => (
+    validateRss(data.url) ? {
+        type: VALIDATION_SUCCESS,
         data
     } : {
         type: ERROR,
@@ -18,14 +24,22 @@ function triggerSave() {
     };
 }
 
-function hideError() {
+function resetAddForm() {
     return {
-        type: HIDE_ERROR
+        type: RESET_ADD_FROM
+    };
+}
+
+function getRssItem(data) {
+    return {
+        type: GET_RSS_ITEM,
+        data
     };
 }
 
 module.exports = {
-    addRss,
+    updateRssFeeds,
     triggerSave,
-    hideError
+    resetAddForm,
+    getRssItem
 };

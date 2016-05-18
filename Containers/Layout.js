@@ -1,5 +1,5 @@
 import React from 'react';
-import GlobalStyles from './../Styles/global';
+import {GlobalStyle} from './../Styles';
 import {View, StyleSheet} from 'react-native';
 import Notification from './Notification';
 let styles;
@@ -7,7 +7,7 @@ let styles;
 const Layout = ({children}) => (
     <View style={styles.container}>
         <Notification />
-        <View style={GlobalStyles.wrapper}>
+        <View style={GlobalStyle.wrapper}>
             {children}
         </View>
     </View>
