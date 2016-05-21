@@ -88,7 +88,7 @@ class RssList extends React.Component {
                 this.state.rss, this.state.sectionIds, this.state.rowIds);
 
             result = (
-                <NotificationContainer scrollEnabled={false}>
+                <NotificationContainer scrollEnabled={!this.props.loadedFeeds.length}>
                     <View style={styles.container}>
                         <ListView
                             style={styles.listView}

@@ -4,16 +4,10 @@ import {View, StyleSheet, ScrollView} from 'react-native';
 import Notification from './Notification';
 let styles;
 
-const NotificationContainer = ({children, style, scrollEnabled}) => (
+const NotificationContainer = ({children, style, disableScroll}) => (
     <View style={styles.container}>
         <Notification />
-        {scrollEnabled ? (
-            <ScrollView style={[GlobalStyle.wrapper, style]}>
-                {children}
-            </ScrollView>
-        ) : <View style={[GlobalStyle.wrapper, style]}>
-            {children}
-        </View>}
+        {disableScroll === true ? (<View style={[GlobalStyle.wrapper, style]} children={children} />) : (<ScrollView style={[GlobalStyle.wrapper, style]} children={children} />)}
     </View>
 );
 
@@ -29,7 +23,7 @@ NotificationContainer.propTypes = {
         React.PropTypes.string
     ]),
     style: View.propTypes.style,
-    scrollEnabled: React.PropTypes.bool
+    disableScroll: React.PropTypes.bool
 };
 
 module.exports = NotificationContainer;
