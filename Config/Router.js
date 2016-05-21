@@ -1,4 +1,4 @@
-import navBar from './../Containers/NavBar';
+import navBar from './../Components/NavBar';
 import RssList from './../Containers/RssList';
 import AddRss from './../Containers/AddRss';
 import Settings from './../Containers/Settings';

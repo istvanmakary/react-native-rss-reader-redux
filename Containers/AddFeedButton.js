@@ -7,7 +7,12 @@ import {Actions} from 'react-native-redux-router';
 const AddFeedButton = () => (
     <View style={GlobalStyle.wrapper}>
         <View style={GlobalStyle.center}>
-            <Button containerStyle={GlobalStyle.emptyMessage} onPress={Actions.add}>
+            <Button
+                containerStyle={
+                    [GlobalStyle.roundedButton, GlobalStyle.headerCorrection]
+                }
+                onPress={Actions.add}
+            >
                 Add RSS feed
             </Button>
         </View>

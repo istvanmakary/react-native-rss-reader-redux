@@ -5,18 +5,26 @@ import {Colors} from './../Styles';
 import {hideNotification} from './../Redux/Actions/NoticifationAction';
 let styles;
 
-let Notification = (props) => (
-    props.notification ? (
-        <View style={[styles.container, styles[props.notification.type]]}>
-            <Text style={styles.text}>{props.notification.message}</Text>
-        </View>
-    ) : <View />
-);
+class Notification extends React.Component {
+    componentWillUnmount() {
+        this.props.hideNotification();
+    }
+
+    render() {
+        return (
+            this.props.notification ? (
+                <View style={[styles.container, styles[this.props.notification.type]]}>
+                    <Text style={styles.text}>{this.props.notification.message}</Text>
+                </View>
+            ) : <View />
+        );
+    }
+}
 
 Notification.propTypes = {
     notification: React.PropTypes.oneOfType([
         React.PropTypes.object,
-        React.PropTypes.bool
+        React.PropTypes.string
     ]),
     currentRoute: React.PropTypes.string,
     hideNotification: React.PropTypes.func

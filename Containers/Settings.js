@@ -1,46 +1,39 @@
 import React from 'react';
-import {View, ListView, Text, StyleSheet} from 'react-native';
-import IconButton from './IconButton';
+import {View, Text, StyleSheet} from 'react-native';
+import IconButton from './../Components/IconButton';
 import {connect} from 'react-redux';
 import AddFeedButton from './AddFeedButton';
 import {Colors} from './../Styles';
-import Layout from './Layout';
+import NotificationContainer from './NotificationContainer';
 import {Actions} from 'react-native-redux-router';
-let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 let styles;
+
 let editRow = (rssId) => {
-    Actions.add({rssId: rssId});
+    Actions.add({rssId});
 };
 
-const renderRow = ({id, url}) => {
-    return (
-        <View style={styles.row} key={id}>
-            <Text style={styles.url} numberOfLines={1}>{url}</Text>
-            <IconButton
-                onPress={() => editRow(id)}
-                color={Colors.blue}
-                src="pencil"
-                size={18}
-                onlyIcon
-            />
-        </View>
-    );
-};
+const renderRow = ({id, url, status}) => (
+    <View style={styles.row} key={id}>
+        <View style={[styles.status, styles[`status_${status}`]]} />
+        <Text numberOfLines={1} style={styles.url} numberOfLines={1}>{url}</Text>
+        <IconButton
+            onPress={() => editRow(id)}
+            color={Colors.blue}
+            src="pencil"
+            size={18}
+            onlyIcon
+        />
+    </View>
+);
 
 const Settings = (props) => {
-    let dataSource;
-
     if (props.feeds.length) {
-        dataSource = ds.cloneWithRows(props.feeds);
+        let rows = props.feeds.map((item) => renderRow(item));
 
         return (
-            <Layout>
-                <ListView
-                    style={styles.listView}
-                    dataSource={dataSource}
-                    renderRow={renderRow}
-                />
-            </Layout>
+            <NotificationContainer style={styles.listView}>
+                {rows}
+            </NotificationContainer>
         );
     }
 
@@ -51,7 +44,8 @@ const Settings = (props) => {
 
 renderRow.propTypes = {
     id: React.PropTypes.string,
-    url: React.PropTypes.string
+    url: React.PropTypes.string,
+    status: React.PropTypes.string
 };
 
 Settings.propTypes = {
@@ -72,16 +66,36 @@ styles = StyleSheet.create({
         marginBottom: 2,
         alignSelf: 'stretch',
         backgroundColor: Colors.white,
-        flexDirection: 'row'
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     url: {
+        flex: 1,
+        alignSelf: 'stretch',
+        fontWeight: 'bold',
+        marginLeft: -8,
         marginRight: -30,
         paddingRight: 50,
-        fontWeight: 'bold'
+        paddingLeft: 16,
+        backgroundColor: 'transparent'
     },
     icon: {
         height: 10,
         marginLeft: 10
+    },
+    status: {
+        width: 8,
+        height: 8,
+        borderRadius: 5
+    },
+    status_fetching: {
+        backgroundColor: Colors.gray
+    },
+    status_success: {
+        backgroundColor: Colors.blue
+    },
+    status_failed: {
+        backgroundColor: Colors.red
     }
 });
 
@@ -93,6 +107,4 @@ function mapStateToProps(state) {
     };
 }
 
-let mapDispatchToProps = {};
-
-module.exports = connect(mapStateToProps, mapDispatchToProps)(Settings);
+module.exports = connect(mapStateToProps)(Settings);

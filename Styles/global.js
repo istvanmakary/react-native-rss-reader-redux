@@ -14,8 +14,10 @@ module.exports = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     },
-    emptyMessage: {
-        marginTop: -60,
+    headerCorrection: {
+        marginTop: -60
+    },
+    roundedButton: {
         padding: 12,
         overflow: 'hidden',
         borderRadius: 4,

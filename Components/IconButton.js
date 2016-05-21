@@ -2,14 +2,15 @@ import React from 'React';
 import {View} from 'react-native';
 import Button from './../Components/Button';
 import Icon from './../Components/Icon';
+let key = new Date().getTime();
 
 let btn = (props) => {
     let buttonContent = [
         (props.src ? (
-            <View style={props.iconStyle}>
+            <View key={key} style={props.iconStyle}>
                 <Icon src={props.src} size={props.size} color={props.color} />
             </View>
-        ) : <View style={props.iconStyle} />),
+        ) : <View key={key + 1} style={props.iconStyle} />),
         (props.onlyIcon ? null : props.children)
     ];
 
@@ -30,10 +31,9 @@ let btn = (props) => {
 };
 
 btn.propTypes = {
-    text: React.PropTypes.string.isRequired,
-    buttonStyle: React.PropTypes.object,
-    iconStyle: React.PropTypes.object,
-    containerStyle: React.PropTypes.object,
+    buttonStyle: View.propTypes.style,
+    iconStyle: View.propTypes.style,
+    containerStyle: View.propTypes.style,
     onPress: React.PropTypes.func,
     styleDisabled: React.PropTypes.object,
     src: React.PropTypes.string,

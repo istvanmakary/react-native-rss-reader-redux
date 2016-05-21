@@ -1,145 +1,67 @@
 import {
-    VALIDATION_SUCCESS,
+    ADD_RSS,
+    UPDATE_RSS,
     ERROR,
     TRIGGER_SAVE,
     RESET_ADD_FROM,
-    GET_RSS_ITEM
+    GET_RSS_ITEM,
+    DELETE_RSS_FEED,
+    RSS_FETCH_START,
+    RSS_FETCH_FAIL,
+    RSS_FETCH_SUCCESS,
+    DUPLICATED_FEED
 } from './../Config/RssConfig';
 // let DOMParser = require('xmldom').DOMParser;
 
 let initialState = {
     success: false,
+    fetching: false,
     feeds: [],
     errorMessage: false,
     triggerSave: false,
-    editItem: false
+    editItem: false,
+    loadedFeeds: []
 };
-
-let fetchRss = (url) => (
-    new Promise((resolve, reject) => {
-        let request = new XMLHttpRequest();
-
-        request.onreadystatechange = (e) => {
-            if (request.readyState !== 4) {
-                return;
-            }
-
-            if (request.status === 200) {
-                resolve(request.responseText);
-            } else {
-                reject(e);
-            }
-        };
-
-        request.open('GET', url);
-        request.send();
-    })
-);
-
-let parseXML = (xml) => {
-    let i;
-    let items;
-    let result = {
-        header: {
-            title: xml.getElementsByTagName('title')[0].textContent,
-            link: xml.getElementsByTagName('link')[0].textContent
-        },
-        sections: []
-    };
-
-    items = xml.getElementsByTagName('item');
-    i = 0;
-
-    while (i < items.length) {
-        if (items.hasOwnProperty(i)) {
-            result.sections.push({
-                id: i,
-                title: items[i].getElementsByTagName('title')[0].textContent,
-                link: items[i].getElementsByTagName('link')[0].textContent,
-                description: items[i].getElementsByTagName('description')[0].textContent
-            });
-
-            i++;
-        }
-    }
-};
-
-let parseResult = (response) => {
-    let success = true;
-    let setError = () => {success = false;};
-
-    let dom = new DOMParser({
-        errorHandler: {
-            warning: setError,
-            error: setError,
-            fatalError: setError
-        }
-    }).parseFromString(response, 'text/xml');
-
-    return success ? dom : false;
-};
-// fetchRss(url).then((response) => {
-//     let dom = parseResult(response);
-//
-//     if (dom) {
-//         let parsedResult = parseXML(dom, state);
-//         let currentFeed = state.feeds;
-//
-//         currentFeed.push(Object.create({}, {url}, parsedResult.result));
-//
-//         currentFeed = currentFeed.map((feed, i) => {
-//             if (!feed.id) {
-//                 return Object.create({}, feed, {id: `section-${i}`});
-//             }
-//
-//             return feed;
-//         });
-//
-//         result = {
-//             currentFeed,
-//             success: true,
-//             url: '',
-//             error: null
-//         };
-//     } else {
-//         result.error = 'Couldn\'t parse the given feed!';
-//     }
-// }, () => {
-//     result.error = 'Couldn\'t fetch the given feed!';
-// });
 
 let rssReducer = (state = initialState, action = {}) => {
-    let newState;
-
     switch (action.type) {
-        case VALIDATION_SUCCESS:
-            newState = Object.assign({}, state, {
+        case ADD_RSS:
+            return Object.assign({}, state, {
                 success: true,
                 errorMessage: false,
-                triggerSave: false
+                triggerSave: false,
+                feeds: [...state.feeds, {
+                    id: `feed-item-${state.feeds.length}`,
+                    url: action.data.url,
+                    order: state.feeds.length,
+                    status: 'fetching'
+                }]
             });
-
-            if (action.data.id) {
-                newState.feeds.map((rss) => {
+        case UPDATE_RSS:
+            return Object.assign({}, state, {
+                success: true,
+                errorMessage: false,
+                triggerSave: false,
+                feeds: state.feeds.map((rss) => {
                     if (rss.id !== action.data.id) {
                         return rss;
                     }
 
-                    return action.data;
-                });
-            } else {
-                newState.feeds.push({
-                    id: `feed-item-${state.feeds.length}`,
-                    url: action.data.url,
-                    order: state.feeds.length
-                });
-            }
-
-            return newState;
+                    return Object.assign({}, action.data, {
+                        status: 'fetching'
+                    });
+                })
+            });
         case ERROR:
             return Object.assign({}, state, {
                 success: false,
                 errorMessage: 'The entered rss feed is not valid!',
+                triggerSave: false
+            });
+        case DUPLICATED_FEED:
+            return Object.assign({}, state, {
+                success: false,
+                errorMessage: 'This feed already exists!',
                 triggerSave: false
             });
         case TRIGGER_SAVE:
@@ -150,7 +72,8 @@ let rssReducer = (state = initialState, action = {}) => {
             return Object.assign({}, state, {
                 errorMessage: false,
                 success: false,
-                triggerSave: false
+                triggerSave: false,
+                editItem: false
             });
         case GET_RSS_ITEM:
             return Object.assign({}, state, {
@@ -159,6 +82,48 @@ let rssReducer = (state = initialState, action = {}) => {
                         return rss;
                     }
                 })
+            });
+        case DELETE_RSS_FEED:
+            return Object.assign({}, state, {
+                success: true,
+                errorMessage: false,
+                triggerSave: false,
+                feeds: state.feeds.reduce((rss) => {
+                    if (rss.id !== action.data.id) {
+                        return rss;
+                    }
+                })
+            });
+        case RSS_FETCH_START:
+            return Object.assign({}, state, {
+                fetching: true
+            });
+        case RSS_FETCH_FAIL:
+            return Object.assign({}, state, {
+                fetching: false,
+                feeds: state.feeds.map((rss) => {
+                    if (rss.id !== action.data.id) {
+                        return rss;
+                    }
+
+                    return Object.assign({}, rss, {
+                        status: 'failed'
+                    });
+                })
+            });
+        case RSS_FETCH_SUCCESS:
+            return Object.assign({}, state, {
+                fetching: false,
+                feeds: state.feeds.map((rss) => {
+                    if (rss.id !== action.data.id) {
+                        return rss;
+                    }
+
+                    return Object.assign({}, rss, {
+                        status: 'success'
+                    });
+                }),
+                loadedFeeds: [...state.loadedFeeds, action.data.result]
             });
         default:
             return state;

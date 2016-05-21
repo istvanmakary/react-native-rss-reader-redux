@@ -6,13 +6,13 @@ let Input = ({label, name, value, onChangeText, placeholder, ...props}) => (
     <View key={name} style={styles.inputContainer}>
         <Text style={styles.inputLabel}>{label}</Text>
         <TextInput
+            {...props}
             autoCorrect={false}
             multiline={false}
             onChangeText={onChangeText}
             placeholder={placeholder}
             style={styles.inputField}
             value={value}
-            {...props}
         />
     </View>
 );
