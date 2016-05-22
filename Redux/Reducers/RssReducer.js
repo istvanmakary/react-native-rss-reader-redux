@@ -11,7 +11,10 @@ import {
     RSS_FETCH_SUCCESS,
     DUPLICATED_FEED
 } from './../Config/RssConfig';
-// let DOMParser = require('xmldom').DOMParser;
+
+import {
+    REDUX_STORAGE_LOAD
+} from './../Config/Storage';
 
 let initialState = {
     success: false,
@@ -25,6 +28,8 @@ let initialState = {
 
 let rssReducer = (state = initialState, action = {}) => {
     switch (action.type) {
+        case REDUX_STORAGE_LOAD:
+            return Object.assign({}, state, action.payload.rssReducer || {});
         case ADD_RSS:
             return Object.assign({}, state, {
                 success: true,

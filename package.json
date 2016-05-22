@@ -22,8 +22,9 @@
     "react-native-vector-icons": "^2.0.2",
     "react-redux": "^4.4.5",
     "redux": "^3.5.2",
-    "xmldom": "^0.1.22",
-    "redux-thunk": "^2.1.0"
+    "redux-storage": "^4.0.0",
+    "redux-thunk": "^2.1.0",
+    "xmldom": "^0.1.22"
   },
   "devDependencies": {
     "redux-logger": "^2.6.1"

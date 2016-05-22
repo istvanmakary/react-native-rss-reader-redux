@@ -1,7 +1,7 @@
 const DISPLAY = 'DISPLAY';
 const HIDE = 'HIDE';
 
-module.exports = {
+export {
     DISPLAY,
     HIDE
 };

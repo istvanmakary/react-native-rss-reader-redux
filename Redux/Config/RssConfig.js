@@ -10,7 +10,7 @@ const RSS_FETCH_FAIL = 'RSS_FETCH_FAIL';
 const RSS_FETCH_SUCCESS = 'RSS_FETCH_SUCCESS';
 const DUPLICATED_FEED = 'DUPLICATED_FEED';
 
-module.exports = {
+export {
     ADD_RSS,
     UPDATE_RSS,
     ERROR,

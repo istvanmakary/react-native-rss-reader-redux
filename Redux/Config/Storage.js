@@ -1,0 +1,5 @@
+const REDUX_STORAGE_LOAD = 'REDUX_STORAGE_LOAD';
+
+export {
+    REDUX_STORAGE_LOAD
+};

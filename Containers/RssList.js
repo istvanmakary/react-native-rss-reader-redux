@@ -46,6 +46,7 @@ class RssList extends React.Component {
             sectionIds,
             rowIds
         });
+
     }
 
     openUrl(url) {
