@@ -87,6 +87,8 @@ class RssList extends React.Component {
             dataSource = this.state.ds.cloneWithRowsAndSections(
                 this.state.rss, this.state.sectionIds, this.state.rowIds);
 
+            console.log(this.state.rss, this.state.sectionIds, this.state.rowIds);
+
             result = (
                 <NotificationContainer scrollEnabled={!this.props.loadedFeeds.length}>
                     <View style={styles.container}>
